@@ -6,23 +6,63 @@ function addItem() {
     return;
   }
 
-  const item = document.createElement("li");
+  const item = {
+    text: text,
+    completed: false
+  };
 
-  item.innerHTML = `
-    <input type="checkbox">
-    <span>${text}</span>
-    <button class="delete">Delete</button>
-  `;
+  const items = JSON.parse(localStorage.getItem("items")) || [];
 
-  document.getElementById("list").appendChild(item);
+  items.push(item);
+
+  localStorage.setItem("items", JSON.stringify(items));
 
   input.value = "";
 
-  item.querySelector("input").onclick = function() {
-    item.classList.toggle("completed");
-  };
-
-  item.querySelector(".delete").onclick = function() {
-    item.remove();
-  };
+  showItems();
 }
+
+
+function showItems() {
+  const list = document.getElementById("list");
+
+  list.innerHTML = "";
+
+  const items = JSON.parse(localStorage.getItem("items")) || [];
+
+  items.forEach(function(item, index) {
+
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <input type="checkbox" ${item.completed ? "checked" : ""}>
+      <span>${item.text}</span>
+      <button class="delete">Delete</button>
+    `;
+
+    if (item.completed) {
+      li.classList.add("completed");
+    }
+
+    li.querySelector("input").onclick = function() {
+      items[index].completed = this.checked;
+
+      localStorage.setItem("items", JSON.stringify(items));
+
+      showItems();
+    };
+
+    li.querySelector(".delete").onclick = function() {
+      items.splice(index, 1);
+
+      localStorage.setItem("items", JSON.stringify(items));
+
+      showItems();
+    };
+
+    list.appendChild(li);
+  });
+}
+
+
+showItems();
