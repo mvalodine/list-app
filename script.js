@@ -109,6 +109,11 @@ function createSubitem(text) {
   const label = document.createElement("span");
   label.textContent = text;
 
+  checkbox.addEventListener("change", () => {
+    subitem.classList.toggle("completed", checkbox.checked);
+  });
+
   subitem.append(checkbox, label);
+
   return subitem;
 }
