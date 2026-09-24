@@ -54,11 +54,12 @@ button:hover {
 }
 
 .list-header {
-  display: flex;
+display: flex;
   align-items: center;
   padding: 14px;
   cursor: pointer;
   font-weight: bold;
+  text-align: left;
 }
 
 .arrow {
@@ -74,6 +75,7 @@ button:hover {
   display: flex;
   align-items: center;
   margin: 8px 0;
+  text-alight: left;
 }
 
 .subitem input[type="checkbox"] {
