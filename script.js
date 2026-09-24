@@ -63,27 +63,26 @@ function addSubitem(button) {
 
   input.addEventListener("keydown", function(event) {
 
-    if (event.key === "Enter") {
-
-      const text = input.value.trim();
-
-      if (text === "") {
-        return;
-      }
-
-      const subitem = document.createElement("div");
-
-      subitem.className = "subitem";
-
-      subitem.innerHTML = `
-        <input type="checkbox">
-        <span>${text}</span>
-      `;
-
-      button.parentElement.insertBefore(subitem, input);
-
-      input.remove();
+    if (event.key !== "Enter") {
+      return;
     }
+
+    const text = input.value.trim();
+
+    if (text === "") {
+      return;
+    }
+
+    const subitem = document.createElement("div");
+
+    subitem.className = "subitem";
+
+    subitem.innerHTML = `
+      <input type="checkbox">
+      <span>${text}</span>
+    `;
+
+    input.replaceWith(subitem);
 
   });
 }
