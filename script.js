@@ -55,6 +55,7 @@ function addSubitem(button) {
 
   input.type = "text";
   input.placeholder = "New subitem...";
+  input.className = "subitem-input";
 
   button.parentElement.insertBefore(input, button);
 
