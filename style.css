@@ -39,11 +39,13 @@ button {
 }
 
 ul {
+  text-align: left;
   list-style: none;
   padding: 0;
 }
 
 li {
+  text-align: left;
   display: flex;
   align-items: center;
   gap: 10px;
