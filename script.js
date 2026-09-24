@@ -48,7 +48,6 @@ function toggleList(header) {
   }
 }
 
-
 function addSubitem(button) {
 
   const input = document.createElement("input");
