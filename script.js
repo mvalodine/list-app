@@ -1,87 +1,114 @@
 function addList() {
-
   const input = document.getElementById("listInput");
-  const text = input.value.trim();
+  if (!input) {
+    return;
+  }
 
-  if (text === "") {
+  const text = input.value.trim();
+  if (!text) {
     return;
   }
 
   const list = document.createElement("div");
   list.className = "list";
 
-  list.innerHTML = `
-    <div class="list-header" onclick="toggleList(this)">
-      <span class="arrow">▼</span>
-      <span>${text}</span>
-    </div>
+  const header = document.createElement("div");
+  header.className = "list-header";
+  header.addEventListener("click", () => toggleList(header));
+  header.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleList(header);
+    }
+  });
+  header.setAttribute("tabindex", "0");
+  header.setAttribute("role", "button");
 
-    <div class="list-content">
-      <div class="subitem">
-        <input type="checkbox">
-        <span>Example subitem</span>
-      </div>
+  const arrow = document.createElement("span");
+  arrow.className = "arrow";
+  arrow.textContent = "▼";
 
-      <button onclick="addSubitem(this)">
-        + Add subitem
-      </button>
-    </div>
-  `;
+  const title = document.createElement("span");
+  title.textContent = text;
 
-  document.getElementById("lists").appendChild(list);
+  header.append(arrow, title);
+
+  const content = document.createElement("div");
+  content.className = "list-content";
+
+  const sampleSubitem = createSubitem("Example subitem");
+
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.textContent = "+ Add subitem";
+  addButton.addEventListener("click", () => addSubitem(addButton));
+
+  content.append(sampleSubitem, addButton);
+  list.append(header, content);
+
+  const listsContainer = document.getElementById("lists");
+  if (listsContainer) {
+    listsContainer.appendChild(list);
+  }
 
   input.value = "";
 }
 
-
 function toggleList(header) {
-
   const content = header.nextElementSibling;
   const arrow = header.querySelector(".arrow");
 
-  if (content.style.display === "none") {
-    content.style.display = "block";
-    arrow.textContent = "▼";
-  } else {
-    content.style.display = "none";
-    arrow.textContent = "▶";
+  if (!content || !arrow) {
+    return;
   }
+
+  const isHidden = content.style.display === "none";
+  content.style.display = isHidden ? "block" : "none";
+  arrow.textContent = isHidden ? "▼" : "▶";
 }
 
 function addSubitem(button) {
+  const parent = button.parentElement;
+  if (!parent) {
+    return;
+  }
 
   const input = document.createElement("input");
-
   input.type = "text";
   input.placeholder = "New subitem...";
   input.className = "subitem-input";
 
-  button.parentElement.insertBefore(input, button);
-
+  parent.insertBefore(input, button);
   input.focus();
 
-  input.addEventListener("keydown", function(event) {
-
+  const handleKeydown = (event) => {
     if (event.key !== "Enter") {
       return;
     }
 
     const text = input.value.trim();
-
-    if (text === "") {
+    if (!text) {
       return;
     }
 
-    const subitem = document.createElement("div");
-
-    subitem.className = "subitem";
-
-    subitem.innerHTML = `
-      <input type="checkbox">
-      <span>${text}</span>
-    `;
-
+    const subitem = createSubitem(text);
     input.replaceWith(subitem);
+    input.removeEventListener("keydown", handleKeydown);
+  };
 
-  });
+  input.addEventListener("keydown", handleKeydown);
+}
+
+function createSubitem(text) {
+  const subitem = document.createElement("div");
+  subitem.className = "subitem";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+
+  const label = document.createElement("span");
+  label.textContent = text;
+
+  subitem.append(checkbox, label);
+  return subitem;
 }
