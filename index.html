@@ -3,39 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A simple personal list app">
-  <meta name="theme-color" content="#ffffff">
-
-  <title>My List</title>
+  <title>My Lists</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
+
   <main class="container">
-    <h1>My List</h1>
 
-    <form class="input-area" onsubmit="addItem(); return false;">
-      <label for="itemInput">Add an item</label>
-      <div>
-        <input
-          id="itemInput"
-          name="item"
-          type="text"
-          placeholder="Add something..."
-          autocomplete="off"
-          required
-        >
-        <button type="submit">Add</button>
-      </div>
-    </form>
+    <h1>My Lists</h1>
 
-    <section aria-labelledby="listHeading">
-      <h2 id="listHeading">Items</h2>
-      <ul id="list" aria-live="polite"></ul>
-    </section>
+    <div class="add-list">
+      <input id="listInput" type="text" placeholder="New list...">
+      <button onclick="addList()">Add List</button>
+    </div>
+
+    <div id="lists"></div>
+
   </main>
 
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
