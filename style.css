@@ -71,10 +71,12 @@ button:hover {
 }
 
 .subitem {
+  display: flex;
+  align-items: center;
   margin: 8px 0;
 }
 
-.subitem input {
+.subitem input[type="checkbox"] {
   width: auto;
   margin-right: 8px;
 }
