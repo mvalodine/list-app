@@ -1,4 +1,3 @@
-```javascript
 function addItem() {
   const input = document.getElementById("itemInput");
   const text = input.value;
@@ -104,4 +103,4 @@ function showItems() {
 
 
 showItems();
-```
+
