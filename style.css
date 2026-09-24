@@ -1,4 +1,4 @@
-{
+* {
   box-sizing: border-box;
 }
 
@@ -54,7 +54,7 @@ button:hover {
 }
 
 .list-header {
-display: flex;
+  display: flex;
   align-items: center;
   padding: 14px;
   cursor: pointer;
@@ -75,12 +75,18 @@ display: flex;
   display: flex;
   align-items: center;
   margin: 8px 0;
-  text-alight: left;
+  text-align: left;
 }
 
 .subitem input[type="checkbox"] {
-  width: auto;
-  margin-right: 8px;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0 8px 0 0;
+  padding: 0;
+  border: 1px solid #999;
+  border-radius: 3px;
+  accent-color: #333;
 }
 
 .subitem-input {
@@ -89,6 +95,7 @@ display: flex;
   margin: 8px 0;
   padding: 8px;
 }
+
 .subitem.completed span {
   text-decoration: line-through;
   color: #999;
