@@ -1,106 +1,70 @@
-function addItem() {
-  const input = document.getElementById("itemInput");
-  const text = input.value;
+function addList() {
+
+  const input = document.getElementById("listInput");
+  const text = input.value.trim();
 
   if (text === "") {
     return;
   }
 
-  const item = {
-    text: text,
-    completed: false,
-    subitems: []
-  };
+  const list = document.createElement("div");
+  list.className = "list";
 
-  const items = JSON.parse(localStorage.getItem("items")) || [];
+  list.innerHTML = `
+    <div class="list-header" onclick="toggleList(this)">
+      <span class="arrow">▼</span>
+      <span>${text}</span>
+    </div>
 
-  items.push(item);
+    <div class="list-content">
+      <div class="subitem">
+        <input type="checkbox">
+        <span>Example subitem</span>
+      </div>
 
-  localStorage.setItem("items", JSON.stringify(items));
+      <button onclick="addSubitem(this)">
+        + Add subitem
+      </button>
+    </div>
+  `;
+
+  document.getElementById("lists").appendChild(list);
 
   input.value = "";
-
-  showItems();
 }
 
 
-function showItems() {
-  const list = document.getElementById("list");
+function toggleList(header) {
 
-  list.innerHTML = "";
+  const content = header.nextElementSibling;
+  const arrow = header.querySelector(".arrow");
 
-  const items = JSON.parse(localStorage.getItem("items")) || [];
-
-  items.forEach(function(item, index) {
-
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-      <input type="checkbox" ${item.completed ? "checked" : ""}>
-      <span>${item.text}</span>
-      <button class="subitem">+ Subitem</button>
-      <button class="delete">Delete</button>
-    `;
-
-    if (item.completed) {
-      li.classList.add("completed");
-    }
-
-    // Complete item
-    li.querySelector("input").onclick = function() {
-      items[index].completed = this.checked;
-
-      localStorage.setItem("items", JSON.stringify(items));
-
-      showItems();
-    };
-
-    // Delete item
-    li.querySelector(".delete").onclick = function() {
-      items.splice(index, 1);
-
-      localStorage.setItem("items", JSON.stringify(items));
-
-      showItems();
-    };
-
-    // Add subitem
-    li.querySelector(".subitem").onclick = function() {
-
-      const text = prompt("What is the subitem?");
-
-      if (text === null || text === "") {
-        return;
-      }
-
-      items[index].subitems.push({
-        text: text,
-        completed: false
-      });
-
-      localStorage.setItem("items", JSON.stringify(items));
-
-      showItems();
-    };
-
-    // Show subitems
-    const sublist = document.createElement("ul");
-
-    item.subitems.forEach(function(subitem) {
-
-      const subli = document.createElement("li");
-
-      subli.textContent = subitem.text;
-
-      sublist.appendChild(subli);
-    });
-
-    li.appendChild(sublist);
-
-    list.appendChild(li);
-  });
+  if (content.style.display === "none") {
+    content.style.display = "block";
+    arrow.textContent = "▼";
+  } else {
+    content.style.display = "none";
+    arrow.textContent = "▶";
+  }
 }
 
 
-showItems();
+function addSubitem(button) {
 
+  const text = prompt("What is the subitem?");
+
+  if (text === null || text.trim() === "") {
+    return;
+  }
+
+  const subitem = document.createElement("div");
+
+  subitem.className = "subitem";
+
+  subitem.innerHTML = `
+    <input type="checkbox">
+    <span>${text}</span>
+  `;
+
+  button.parentElement.insertBefore(subitem, button);
+}
