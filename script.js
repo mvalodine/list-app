@@ -51,20 +51,38 @@ function toggleList(header) {
 
 function addSubitem(button) {
 
-  const text = prompt("What is the subitem?");
+  const input = document.createElement("input");
 
-  if (text === null || text.trim() === "") {
-    return;
-  }
+  input.type = "text";
+  input.placeholder = "New subitem...";
 
-  const subitem = document.createElement("div");
+  button.parentElement.insertBefore(input, button);
 
-  subitem.className = "subitem";
+  input.focus();
 
-  subitem.innerHTML = `
-    <input type="checkbox">
-    <span>${text}</span>
-  `;
+  input.addEventListener("keydown", function(event) {
 
-  button.parentElement.insertBefore(subitem, button);
+    if (event.key === "Enter") {
+
+      const text = input.value.trim();
+
+      if (text === "") {
+        return;
+      }
+
+      const subitem = document.createElement("div");
+
+      subitem.className = "subitem";
+
+      subitem.innerHTML = `
+        <input type="checkbox">
+        <span>${text}</span>
+      `;
+
+      button.parentElement.insertBefore(subitem, input);
+
+      input.remove();
+    }
+
+  });
 }
