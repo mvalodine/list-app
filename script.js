@@ -83,15 +83,16 @@ function addSubitem(button) {
   const finish = (shouldSave) => {
     const text = input.value.trim();
 
+    // Remove listeners before replacing/removing the input validly.
+    input.removeEventListener("keydown", handleKeydown);
+    input.removeEventListener("blur", handleBlur);
+
     if (shouldSave && text) {
       const subitem = createSubitem(text);
       input.replaceWith(subitem);
     } else {
       input.remove();
     }
-
-    input.removeEventListener("keydown", handleKeydown);
-    input.removeEventListener("blur", handleBlur);
   };
 
   const handleKeydown = (event) => {
