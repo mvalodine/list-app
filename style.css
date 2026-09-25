@@ -98,7 +98,7 @@ button:hover {
 }
 
 .subitem span {
-  flex: 0 1 auto;
+  flex: 0 0 24px;
   text-align: left;
 }
 
