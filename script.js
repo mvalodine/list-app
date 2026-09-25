@@ -1,137 +1,148 @@
-function addList() {
-  const input = document.getElementById("listInput");
-  if (!input) {
-    return;
-  }
-
-  const text = input.value.trim();
-  if (!text) {
-    return;
-  }
-
-  const list = document.createElement("div");
-  list.className = "list";
-
-  const header = document.createElement("div");
-  header.className = "list-header";
-  header.setAttribute("tabindex", "0");
-  header.setAttribute("role", "button");
-
-  const toggleListView = () => toggleList(header);
-  header.addEventListener("click", toggleListView);
-  header.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleListView();
+class ListApp {
+  constructor(containerId, inputId) {
+    this.container = document.getElementById(containerId);
+    this.input = document.getElementById(inputId);
+    
+    if (this.input) {
+      this.input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          this.addList();
+        }
+      });
     }
-  });
-
-  const arrow = document.createElement("span");
-  arrow.className = "arrow";
-  arrow.textContent = "▼";
-
-  const title = document.createElement("span");
-  title.textContent = text;
-
-  header.append(arrow, title);
-
-  const content = document.createElement("div");
-  content.className = "list-content";
-
-  const sampleSubitem = createSubitem("Example subitem");
-
-  const addButton = document.createElement("button");
-  addButton.type = "button";
-  addButton.textContent = "+ Add subitem";
-  addButton.addEventListener("click", () => addSubitem(addButton));
-
-  content.append(sampleSubitem, addButton);
-  list.append(header, content);
-
-  const listsContainer = document.getElementById("lists");
-  if (listsContainer) {
-    listsContainer.appendChild(list);
   }
 
-  input.value = "";
+  addList() {
+    const text = this.input.value.trim();
+    if (!text) return;
+
+    const list = new List(text);
+    this.container.appendChild(list.element);
+    this.input.value = "";
+    this.input.focus();
+  }
 }
 
-function toggleList(header) {
-  const content = header.nextElementSibling;
-  const arrow = header.querySelector(".arrow");
-
-  if (!content || !arrow) {
-    return;
+class List {
+  constructor(title) {
+    this.title = title;
+    this.element = this.createElement();
   }
 
-  const isHidden = content.style.display === "none";
-  content.style.display = isHidden ? "block" : "none";
-  arrow.textContent = isHidden ? "▼" : "▶";
-}
+  createElement() {
+    const list = document.createElement("div");
+    list.className = "list";
 
-function addSubitem(button) {
-  const parent = button.parentElement;
-  if (!parent) {
-    return;
+    const header = document.createElement("div");
+    header.className = "list-header";
+    header.setAttribute("tabindex", "0");
+    header.setAttribute("role", "button");
+    header.addEventListener("click", () => this.toggle());
+    header.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this.toggle();
+      }
+    });
+
+    const arrow = document.createElement("span");
+    arrow.className = "arrow";
+    arrow.textContent = "▼";
+
+    const title = document.createElement("span");
+    title.textContent = this.title;
+
+    header.append(arrow, title);
+
+    const content = document.createElement("div");
+    content.className = "list-content";
+
+    content.appendChild(new Subitem("Example subitem").element);
+
+    const addButton = document.createElement("button");
+    addButton.type = "button";
+    addButton.textContent = "+ Add subitem";
+    addButton.addEventListener("click", () => this.addSubitem(content, addButton));
+
+    content.appendChild(addButton);
+    list.append(header, content);
+
+    return list;
   }
 
-  const input = document.createElement("input");
-  input.type = "text";
-  input.placeholder = "New subitem...";
+  toggle() {
+    const header = this.element.querySelector(".list-header");
+    const content = header.nextElementSibling;
+    const arrow = header.querySelector(".arrow");
 
-  parent.insertBefore(input, button);
-  input.focus();
+    const isHidden = content.style.display === "none";
+    content.style.display = isHidden ? "block" : "none";
+    arrow.textContent = isHidden ? "▼" : "▶";
+  }
 
-  const finish = (shouldSave) => {
-    const text = input.value.trim();
+  addSubitem(container, button) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "New subitem...";
 
-    input.removeEventListener("keydown", handleKeydown);
-    input.removeEventListener("blur", handleBlur);
+    container.insertBefore(input, button);
+    input.focus();
 
-    if (shouldSave && text) {
-      const subitem = createSubitem(text);
-      input.replaceWith(subitem);
-      return;
-    }
+    const finish = (shouldSave) => {
+      const text = input.value.trim();
 
-    input.remove();
-  };
+      input.removeEventListener("keydown", handleKeydown);
+      input.removeEventListener("blur", handleBlur);
 
-  const handleKeydown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      finish(true);
-      return;
-    }
+      if (shouldSave && text) {
+        container.insertBefore(new Subitem(text).element, input);
+      }
 
-    if (event.key === "Escape") {
-      event.preventDefault();
-      finish(false);
-    }
-  };
+      input.remove();
+    };
 
-  const handleBlur = () => {
-    finish(false);
-  };
+    const handleKeydown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        finish(true);
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        finish(false);
+      }
+    };
 
-  input.addEventListener("keydown", handleKeydown);
-  input.addEventListener("blur", handleBlur);
+    const handleBlur = () => finish(false);
+
+    input.addEventListener("keydown", handleKeydown);
+    input.addEventListener("blur", handleBlur);
+  }
 }
 
-function createSubitem(text) {
-  const subitem = document.createElement("div");
-  subitem.className = "subitem";
+class Subitem {
+  constructor(text) {
+    this.text = text;
+    this.element = this.createElement();
+  }
 
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
+  createElement() {
+    const subitem = document.createElement("div");
+    subitem.className = "subitem";
 
-  const label = document.createElement("span");
-  label.textContent = text;
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.addEventListener("change", () => {
+      subitem.classList.toggle("completed", checkbox.checked);
+    });
 
-  checkbox.addEventListener("change", () => {
-    subitem.classList.toggle("completed", checkbox.checked);
-  });
+    const label = document.createElement("span");
+    label.textContent = this.text;
 
-  subitem.append(checkbox, label);
-  return subitem;
+    subitem.append(checkbox, label);
+    return subitem;
+  }
 }
+
+// Initialize the app
+document.addEventListener("DOMContentLoaded", () => {
+  new ListApp("lists", "listInput");
+});
