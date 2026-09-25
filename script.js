@@ -76,7 +76,6 @@ function addSubitem(button) {
   const input = document.createElement("input");
   input.type = "text";
   input.placeholder = "New subitem...";
-  input.className = "subitem-input";
 
   parent.insertBefore(input, button);
   input.focus();
