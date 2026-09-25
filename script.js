@@ -41,18 +41,18 @@ class ListApp {
     const text = this.input.value.trim();
     if (!text) return;
 
-    const list = new List(text, (lists) => this.updateStorage(lists));
+    const list = new List(text, this);
     this.lists.push(list);
     this.container.appendChild(list.element);
     this.input.value = "";
     this.input.focus();
-    this.updateStorage(this.lists);
+    this.save();
   }
 
   loadLists() {
     const saved = Storage.load();
     saved.forEach(data => {
-      const list = new List(data.title, (lists) => this.updateStorage(lists));
+      const list = new List(data.title, this);
       list.subitems = data.subitems || [];
       list.renderSubitems();
       this.lists.push(list);
@@ -60,17 +60,25 @@ class ListApp {
     });
   }
 
-  updateStorage(lists) {
-    this.lists = lists;
-    Storage.save(lists);
+  removeList(list) {
+    this.lists = this.lists.filter(l => l !== list);
+    this.save();
+  }
+
+  updateList() {
+    this.save();
+  }
+
+  save() {
+    Storage.save(this.lists);
   }
 }
 
 class List {
-  constructor(title, onUpdate) {
+  constructor(title, app) {
     this.title = title;
     this.subitems = [];
-    this.onUpdate = onUpdate;
+    this.app = app;
     this.element = this.createElement();
   }
 
@@ -129,7 +137,7 @@ class List {
 
   renderSubitems() {
     this.subitems.forEach(text => {
-      const subitem = new Subitem(text, (updatedText) => this.updateSubitem(text, updatedText), () => this.deleteSubitem(text));
+      const subitem = new Subitem(text, this);
       this.content.insertBefore(subitem.element, this.addButton);
     });
   }
@@ -155,7 +163,7 @@ class List {
       if (shouldSave && newTitle) {
         this.title = newTitle;
         titleSpan.textContent = newTitle;
-        this.onUpdate(this.getAllLists());
+        this.app.updateList();
       } else {
         titleSpan.textContent = this.title;
       }
@@ -198,9 +206,9 @@ class List {
 
       if (shouldSave && text) {
         this.subitems.push(text);
-        const subitem = new Subitem(text, (updatedText) => this.updateSubitem(text, updatedText), () => this.deleteSubitem(text));
+        const subitem = new Subitem(text, this);
         this.content.insertBefore(subitem.element, input);
-        this.onUpdate(this.getAllLists());
+        this.app.updateList();
       }
 
       input.remove();
@@ -226,13 +234,13 @@ class List {
     const index = this.subitems.indexOf(oldText);
     if (index !== -1) {
       this.subitems[index] = newText;
-      this.onUpdate(this.getAllLists());
+      this.app.updateList();
     }
   }
 
   deleteSubitem(text) {
     this.subitems = this.subitems.filter(item => item !== text);
-    this.onUpdate(this.getAllLists());
+    this.app.updateList();
     this.renderContent();
   }
 
@@ -245,32 +253,14 @@ class List {
 
   delete() {
     this.listElement.remove();
-    this.onUpdate(this.getAllLists());
-  }
-
-  getAllLists() {
-    const parent = this.listElement.parentElement;
-    const lists = [];
-    parent.querySelectorAll(".list").forEach(el => {
-      const titleSpan = el.querySelector(".list-title");
-      if (titleSpan) {
-        const title = titleSpan.textContent;
-        const subitems = [];
-        el.querySelectorAll(".subitem span.subitem-text").forEach(span => {
-          subitems.push(span.textContent);
-        });
-        lists.push({ title, subitems });
-      }
-    });
-    return lists;
+    this.app.removeList(this);
   }
 }
 
 class Subitem {
-  constructor(text, onEdit, onDelete) {
+  constructor(text, list) {
     this.text = text;
-    this.onEdit = onEdit;
-    this.onDelete = onDelete;
+    this.list = list;
     this.isCompleted = false;
     this.element = this.createElement();
   }
@@ -296,7 +286,7 @@ class Subitem {
     deleteBtn.textContent = "×";
     deleteBtn.addEventListener("click", () => {
       subitem.remove();
-      this.onDelete();
+      this.list.deleteSubitem(this.text);
     });
 
     subitem.append(checkbox, label, deleteBtn);
@@ -312,9 +302,9 @@ class Subitem {
     const finish = (shouldSave) => {
       const newText = input.value.trim();
       if (shouldSave && newText) {
+        this.list.updateSubitem(this.text, newText);
         this.text = newText;
         label.textContent = newText;
-        this.onEdit(newText);
       } else {
         label.textContent = this.text;
       }
