@@ -1,8 +1,9 @@
 class ListApp {
-  constructor(containerId, inputId) {
+  constructor(containerId, inputId, buttonId) {
     this.container = document.getElementById(containerId);
     this.input = document.getElementById(inputId);
-    
+    this.button = document.getElementById(buttonId);
+
     if (this.input) {
       this.input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
@@ -10,9 +11,15 @@ class ListApp {
         }
       });
     }
+
+    if (this.button) {
+      this.button.addEventListener("click", () => this.addList());
+    }
   }
 
   addList() {
+    if (!this.container || !this.input) return;
+
     const text = this.input.value.trim();
     if (!text) return;
 
@@ -74,6 +81,8 @@ class List {
     const header = this.element.querySelector(".list-header");
     const content = header.nextElementSibling;
     const arrow = header.querySelector(".arrow");
+
+    if (!content || !arrow) return;
 
     const isHidden = content.style.display === "none";
     content.style.display = isHidden ? "block" : "none";
@@ -142,7 +151,6 @@ class Subitem {
   }
 }
 
-// Initialize the app
 document.addEventListener("DOMContentLoaded", () => {
-  new ListApp("lists", "listInput");
+  new ListApp("lists", "listInput", "addListButton");
 });
