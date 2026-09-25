@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Lists</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Lists</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>My Lists</h1>
 
-<body>
-  <main class="container">
-    <h1>My Lists</h1>
+      <div class="add-list">
+        <input id="listInput" type="text" placeholder="New list..." />
+        <button id="addListButton" type="button">Add List</button>
+      </div>
 
-    <div class="add-list">
-      <input id="listInput" type="text" placeholder="New list...">
-      <button id="addListButton" type="button">Add List</button>
-    </div>
+      <div id="lists"></div>
+    </main>
 
-    <div id="lists"></div>
-  </main>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

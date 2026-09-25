@@ -24,7 +24,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-input {
+#listInput {
   flex: 1;
   padding: 12px;
   border: 1px solid #ccc;
@@ -49,7 +49,7 @@ button:hover {
   background: white;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   overflow: hidden;
 }
 
@@ -64,51 +64,45 @@ button:hover {
   text-align: left;
 }
 
-.list-title {
+.list-header-title {
   flex: 1;
-  user-select: none;
-}
-
-.list-title:hover {
-  text-decoration: underline;
-  opacity: 0.8;
+  min-width: 0;
 }
 
 .arrow {
   flex-shrink: 0;
 }
 
-.delete-list-btn {
-  flex-shrink: 0;
-  padding: 4px 8px;
-  background: transparent;
-  color: #999;
+.delete-list-btn,
+.delete-subitem-btn {
   border: none;
-  font-size: 20px;
+  background: transparent;
+  color: #666;
+  font-size: 18px;
   cursor: pointer;
-  opacity: 0.6;
+  padding: 0 6px;
 }
 
-.delete-list-btn:hover {
-  opacity: 1;
+.delete-list-btn:hover,
+.delete-subitem-btn:hover {
   color: #d32f2f;
 }
 
 .list-content {
-  padding: 10px 14px 14px 40px;
+  padding: 10px 14px 14px 38px;
   border-top: 1px solid #eee;
 }
 
 .list-content input[type="text"] {
   width: 100%;
-  margin: 8px 0;
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 15px;
+  margin: 8px 0;
 }
 
-.list-content button {
+.add-subitem-btn {
   margin-top: 8px;
   background: transparent;
   color: #333;
@@ -116,79 +110,42 @@ button:hover {
   padding: 8px 12px;
 }
 
-.list-content button:hover {
+.add-subitem-btn:hover {
   background: #f0f0f0;
 }
 
 .subitem {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 8px;
   margin: 8px 0;
-  text-align: left;
 }
 
 .subitem input[type="checkbox"] {
-  flex: 0 0 16px;
   width: 16px;
   height: 16px;
   margin: 0;
-  padding: 0;
-  border: 1px solid #999;
-  border-radius: 3px;
   accent-color: #333;
-  cursor: pointer;
 }
 
 .subitem-text {
   flex: 1;
-  user-select: none;
-  cursor: text;
-}
-
-.subitem-text:hover {
-  text-decoration: underline;
-  opacity: 0.8;
-}
-
-.delete-btn {
-  flex-shrink: 0;
-  padding: 4px 8px;
-  background: transparent;
-  color: #999;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.subitem:hover .delete-btn {
-  opacity: 1;
-}
-
-.delete-btn:hover {
-  color: #d32f2f;
+  word-break: break-word;
 }
 
 .subitem.completed .subitem-text {
   text-decoration: line-through;
-  color: #999;
+  color: #888;
 }
 
 .edit-input {
+  flex: 1;
   padding: 6px 10px;
-  border: 1px solid #4CAF50;
+  border: 1px solid #4caf50;
   border-radius: 4px;
   font-size: 15px;
 }
 
-.new-subitem-input {
-  width: 100%;
-  margin: 8px 0;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
+.hidden {
+  display: none;
 }
