@@ -20,24 +20,22 @@ class ListApp {
     this.button = document.getElementById(buttonId);
     this.lists = [];
 
-    if (this.input) {
-      this.input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          this.addList();
-        }
-      });
+    if (!this.container || !this.input || !this.button) {
+      console.error("Missing DOM elements");
+      return;
     }
 
-    if (this.button) {
-      this.button.addEventListener("click", () => this.addList());
-    }
+    this.button.addEventListener("click", () => this.addList());
+    this.input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        this.addList();
+      }
+    });
 
     this.loadLists();
   }
 
   addList() {
-    if (!this.container || !this.input) return;
-
     const text = this.input.value.trim();
     if (!text) return;
 
@@ -146,8 +144,7 @@ class List {
     const isHidden = this.content.style.display === "none";
     this.content.style.display = isHidden ? "block" : "none";
 
-    const header = this.listElement.querySelector(".list-header");
-    const arrow = header.querySelector(".arrow");
+    const arrow = this.listElement.querySelector(".arrow");
     arrow.textContent = isHidden ? "▼" : "▶";
   }
 
