@@ -14,15 +14,17 @@ function addList() {
 
   const header = document.createElement("div");
   header.className = "list-header";
-  header.addEventListener("click", () => toggleList(header));
+  header.setAttribute("tabindex", "0");
+  header.setAttribute("role", "button");
+
+  const toggleListView = () => toggleList(header);
+  header.addEventListener("click", toggleListView);
   header.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      toggleList(header);
+      toggleListView();
     }
   });
-  header.setAttribute("tabindex", "0");
-  header.setAttribute("role", "button");
 
   const arrow = document.createElement("span");
   arrow.className = "arrow";
@@ -83,16 +85,16 @@ function addSubitem(button) {
   const finish = (shouldSave) => {
     const text = input.value.trim();
 
-    // Remove listeners before replacing/removing the input validly.
     input.removeEventListener("keydown", handleKeydown);
     input.removeEventListener("blur", handleBlur);
 
     if (shouldSave && text) {
       const subitem = createSubitem(text);
       input.replaceWith(subitem);
-    } else {
-      input.remove();
+      return;
     }
+
+    input.remove();
   };
 
   const handleKeydown = (event) => {
@@ -131,6 +133,5 @@ function createSubitem(text) {
   });
 
   subitem.append(checkbox, label);
-
   return subitem;
 }
