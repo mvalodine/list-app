@@ -79,6 +79,7 @@ button:hover {
 
 .subitem {
   display: flex;
+  flex: 0 0 8px;
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
@@ -98,7 +99,7 @@ button:hover {
 }
 
 .subitem span {
-  flex: 0 0 24px;
+  flex: 0 1 auto;
   text-align: left;
 }
 
