@@ -80,29 +80,35 @@ function addSubitem(button) {
   parent.insertBefore(input, button);
   input.focus();
 
-  const handleKeydown = (event) => {
-    if (event.key !== "Enter") {
-      return;
-    }
-
-    event.preventDefault();
-
+  const finish = (shouldSave) => {
     const text = input.value.trim();
-    if (!text) {
+
+    if (shouldSave && text) {
+      const subitem = createSubitem(text);
+      input.replaceWith(subitem);
+    } else {
       input.remove();
+    }
+
+    input.removeEventListener("keydown", handleKeydown);
+    input.removeEventListener("blur", handleBlur);
+  };
+
+  const handleKeydown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      finish(true);
       return;
     }
 
-    const subitem = createSubitem(text);
-    input.replaceWith(subitem);
-    input.removeEventListener("keydown", handleKeydown);
+    if (event.key === "Escape") {
+      event.preventDefault();
+      finish(false);
+    }
   };
 
   const handleBlur = () => {
-    if (input.parentElement) {
-      input.remove();
-    }
-    input.removeEventListener("keydown", handleKeydown);
+    finish(false);
   };
 
   input.addEventListener("keydown", handleKeydown);
