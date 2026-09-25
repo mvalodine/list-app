@@ -85,8 +85,11 @@ function addSubitem(button) {
       return;
     }
 
+    event.preventDefault();
+
     const text = input.value.trim();
     if (!text) {
+      input.remove();
       return;
     }
 
@@ -95,7 +98,15 @@ function addSubitem(button) {
     input.removeEventListener("keydown", handleKeydown);
   };
 
+  const handleBlur = () => {
+    if (input.parentElement) {
+      input.remove();
+    }
+    input.removeEventListener("keydown", handleKeydown);
+  };
+
   input.addEventListener("keydown", handleKeydown);
+  input.addEventListener("blur", handleBlur);
 }
 
 function createSubitem(text) {
